@@ -26,4 +26,4 @@ def offerte():
         return delete_passwords(request)
     
 
-app.run(debug=True, port=2000)
+app.run(host='0.0.0.0')
