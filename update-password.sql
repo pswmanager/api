@@ -1,0 +1,1 @@
+UPDATE PASSWORDS1 SET password = %s WHERE id = %s

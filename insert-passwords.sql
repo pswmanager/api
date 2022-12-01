@@ -1,0 +1,1 @@
+INSERT INTO PASSWORDS1 (platform, username, password, user_id) VALUES (%s, %s, %s, %s)

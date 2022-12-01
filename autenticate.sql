@@ -1,0 +1,1 @@
+SELECT id FROM USERS as u WHERE u.username = %s and u.password = %s;

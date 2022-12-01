@@ -1,0 +1,1 @@
+SELECT * FROM PASSWORDS1 where user_id = %s;

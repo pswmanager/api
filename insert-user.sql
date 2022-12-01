@@ -1,0 +1,1 @@
+INSERT INTO USERS(username, password, email) VALUES (%s, %s, %s);
