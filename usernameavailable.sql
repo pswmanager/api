@@ -1,0 +1,1 @@
+select count(*) from USERS where username = %s;

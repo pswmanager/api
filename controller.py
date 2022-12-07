@@ -3,25 +3,25 @@ import mysql.connector
 from models.id import ID
 import json
 
-USER = "admin"
-PASSWORD = "G!getto2004"
-
-db = mysql.connector.connect(
-    host='pswmanagerdb.c4n1igd3jeuj.eu-west-2.rds.amazonaws.com',
-    user=USER,
-    passwd=PASSWORD,
-    database='pswmanagerdb'
-)
+USER = "gabrielefurlan"
+PASSWORD = "nuovapass"
 
 def get_users(request):
     try:
+        db = mysql.connector.connect(
+            host='gabrielefurlan.mysql.pythonanywhere-services.com',
+            user=USER,
+            passwd=PASSWORD,
+            database='gabrielefurlan$pswmanager'
+        )
+
         username = request.args['username']
 
         password = request.args['password']
 
-        with open("autenticate.sql", 'r') as f:
+        with open("/home/gabrielefurlan/pswmanager/autenticate.sql", 'r') as f:
             query = f.readline()
-        
+
         cursor = db.cursor()
 
         cursor.execute(query, (username, password,))
@@ -33,19 +33,43 @@ def get_users(request):
             break
 
         return {"id": selected_id.id}
-    
+
     except:
-        return {"Error": "user not found"}
+
+        return {"Error": True}
+
 
 def post_users(request):
     try:
+        db = mysql.connector.connect(
+            host='gabrielefurlan.mysql.pythonanywhere-services.com',
+            user=USER,
+            passwd=PASSWORD,
+            database='gabrielefurlan$pswmanager'
+        )
+
         dict = json.loads(request.data)
 
-        print(dict)
+        username = dict['username']
 
-        with open("insert-user.sql", 'r') as f:
+
+        with open("/home/gabrielefurlan/pswmanager/usernameavailable.sql", 'r') as f:
             query = f.readline()
-        
+
+        cursor = db.cursor()
+
+        cursor.execute(query, (username,))
+
+        print(cursor)
+
+        for val in cursor:
+            if val[0] != 0:
+                return {"Error": "username in use"}
+            break
+
+        with open("/home/gabrielefurlan/pswmanager/insert-user.sql", 'r') as f:
+            query = f.readline()
+
         print(query)
 
         cursor = db.cursor()
@@ -59,16 +83,23 @@ def post_users(request):
         print(res)
 
         return dict
-    
+
     except:
 
         return {"Error": True}
 
 def get_passwords(request):
     try:
+        db = mysql.connector.connect(
+            host='gabrielefurlan.mysql.pythonanywhere-services.com',
+            user=USER,
+            passwd=PASSWORD,
+            database='gabrielefurlan$pswmanager'
+        )
+
         user_id = request.args["user_id"]
 
-        with open('select-passwords.sql', 'r') as f:
+        with open('/home/gabrielefurlan/pswmanager/select-passwords.sql', 'r') as f:
             query = f.readline()
 
         cursor = db.cursor()
@@ -86,15 +117,22 @@ def get_passwords(request):
                 "user_id": val[4]
             })
 
-        return values
+        return json.dumps(values)
     except:
         return {"Error": True}
 
 def post_passwords(request):
     try:
+        db = mysql.connector.connect(
+            host='gabrielefurlan.mysql.pythonanywhere-services.com',
+            user=USER,
+            passwd=PASSWORD,
+            database='gabrielefurlan$pswmanager'
+        )
+
         data = json.loads(request.data)
 
-        with open('insert-passwords.sql', 'r') as f:
+        with open('/home/gabrielefurlan/pswmanager/insert-passwords.sql', 'r') as f:
             query = f.readline()
 
         cursor = db.cursor()
@@ -103,44 +141,58 @@ def post_passwords(request):
 
         db.commit()
 
-        return data
+        return json.dumps(data)
     except:
         return {"Error": True}
 
 def put_passwords(request):
     try:
+        db = mysql.connector.connect(
+            host='gabrielefurlan.mysql.pythonanywhere-services.com',
+            user=USER,
+            passwd=PASSWORD,
+            database='gabrielefurlan$pswmanager'
+        )
+
         data = json.loads(request.data)
 
-        with open('update-password.sql', 'r') as f:
+        with open('/home/gabrielefurlan/pswmanager/update-password.sql', 'r') as f:
             query = f.readline()
 
         cursor = db.cursor()
 
         cursor.execute(query, (data["password"], data["id"],))
 
-        db.commit()   
+        db.commit()
 
-        return data
-    
+        return json.dumps(data)
+
     except:
 
         return {"Error": True}
 
 def delete_passwords(request):
     try:
+        db = mysql.connector.connect(
+            host='gabrielefurlan.mysql.pythonanywhere-services.com',
+            user=USER,
+            passwd=PASSWORD,
+            database='gabrielefurlan$pswmanager'
+        )
+
         id = request.args["id"]
 
-        with open('delete-password.sql', 'r') as f:
+        with open('/home/gabrielefurlan/pswmanager/delete-password.sql', 'r') as f:
             query = f.readline()
 
         cursor = db.cursor()
 
         cursor.execute(query, (id,))
 
-        db.commit()   
+        db.commit()
 
         return {"Error": False}
-    
+
     except:
 
         return {"Error": True}
